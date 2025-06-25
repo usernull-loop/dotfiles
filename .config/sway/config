@@ -1,0 +1,168 @@
+include /etc/sway/config.d/*
+set $mod Mod4
+set $left h
+set $down j
+set $up k
+set $right l
+set $term foot
+set $menu dmenu_path | dmenu | xargs swaymsg exec --
+include /etc/sway/config-vars.d/*
+# set $gtk_theme Materia-dark
+exec_always --no-startup-id alsactl restore
+exec_always {
+#    GTK_THEME Materia-dark-compact
+#    GTK_ICON_THEME Tela-circle-dark
+    export XDG_CURRENT_DESKTOP=sway
+    export XDG_SESSION_TYPE=wayland
+    export GDK_BACKEND=wayland,x11
+}
+output * bg ~/Pictures/wallpapers/greenpc.jpg fill
+exec_always mako
+default_border pixel 1px
+default_floating_border pixel 1px
+
+client.focused          #b5d3b6 #000000 #ffffff #b5d3b6 #b5d3b6
+client.focused_inactive #444444 #000000 #ffffff #444444 #444444
+client.unfocused        #444444 #000000 #ffffff #444444 #444444
+client.urgent           #FFAFAF #000000 #ffffff #FFAFAF #FFAFAF
+client.placeholder      #444444 #000000 #ffffff #444444 #444444
+   input * {
+	xkb_layout fr
+   }
+    # Start a terminal
+    bindsym $mod+Return exec $term
+
+    # Kill focused window
+    bindsym $mod+q kill
+
+    # Start your launcher
+    bindsym $mod+r exec "dmenu_run -fn 'FireCode Nerd Font-14' -nb '#000000' -nf '#ffffff' -sb '#000000' -sf '#b5d3b6'"
+
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # Reload the configuration file
+    bindsym $mod+Shift+c reload
+
+    bindsym Print exec grim ~/Pictures/$(date +'%Y-%m-%d_%H-%M-%S').png
+
+    # Exit sway (logs you out of your Wayland session)
+    bindsym $mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+#
+# Moving around:
+#
+    # Move your focus around
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+    # Or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # Move the focused window with the same, but add Shift
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    # Ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+#
+# Workspaces:
+#
+# Sway workspace keybindings for French AZERTY layout
+    bindsym $mod+ampersand workspace α
+    bindsym $mod+eacute workspace β    
+    bindsym $mod+quotedbl workspace γ
+    bindsym $mod+apostrophe workspace δ
+    bindsym $mod+parenleft workspace ε
+    bindsym $mod+minus workspace ζ     
+    bindsym $mod+equal workspace η     
+    bindsym $mod+parenright workspace θ
+    bindsym $mod+underscore workspace ι
+    bindsym $mod+agrave workspace κ 
+    bindsym $mod+Shift+ampersand move container to workspace α
+    bindsym $mod+Shift+eacute move container to workspace β
+    bindsym $mod+Shift+quotedbl move container to workspace γ
+    bindsym $mod+Shift+apostrophe move container to workspace δ
+    bindsym $mod+Shift+parenleft move container to workspace ε
+    bindsym $mod+Shift+minus move container to workspace ζ
+    bindsym $mod+Shift+equal move container to workspace η
+    bindsym $mod+Shift+parenright move container to workspace θ
+    bindsym $mod+Shift+underscore move container to workspace ι
+    bindsym $mod+Shift+agrave move container to workspace κ
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+
+    # Switch the current container between different layout styles
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    bindsym $mod+space focus mode_toggle
+
+    # Move focus to the parent container
+    bindsym $mod+a focus parent
+# Resizing containers:
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    # Ditto, with arrow keys
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+m mode "resize"
+# Status Bar:
+bar {
+    font pango:FiraCode Nerd Font 14
+    status_command ~/.config/sway/bs.sh
+    position top
+    colors {
+        statusline #b5d3b6
+        background #000000
+        separator  #222222
+        focused_workspace  #000000 #000000 #b5d3b6
+        active_workspace   #111111 #111111 #b5d3b6
+        inactive_workspace #000000 #000000 #808080
+        urgent_workspace   #ffffff #000000 #FF0000
+        binding_mode       #000000 #b5d3b6 #000000
+    }
+}
+
+include /etc/sway/config.d/*
